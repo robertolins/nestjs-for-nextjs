@@ -24,12 +24,18 @@ export class UserService {
 
     const hashedPassword = await this.hashingService.hash(dto.password);
 
-    const newUser = {
+    return this.userRepository.save({
       name: dto.name,
       email: dto.email,
       password: hashedPassword,
-    };
+    });
+  }
 
-    return this.userRepository.save(newUser);
+  findByEmail(email: string) {
+    return this.userRepository.findOneBy({ email });
+  }
+
+  save(user: User) {
+    return this.userRepository.save(user);
   }
 }
