@@ -1,14 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  Param,
   Patch,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { CustomParseIntPipe } from 'src/common/pipes/custom-parse-int-pipe.pipe';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -22,13 +21,10 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(
-    @Req() req: AuthenticatedRequest,
-    @Param('id', CustomParseIntPipe) id: number,
-  ) {
-    console.log(req.user);
-    return `findOne id: ${id}`;
+  @Get()
+  async findOne(@Req() req: AuthenticatedRequest) {
+    const user = await this.userService.findIfUserExists({ id: req.user.id });
+    return new UserResponseDto(user);
   }
 
   @Post()
@@ -51,6 +47,13 @@ export class UserController {
     @Body() dto: UpdatePasswordDto,
   ) {
     const user = await this.userService.updatePassword(req.user.id, dto);
+    return new UserResponseDto(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async remove(@Req() req: AuthenticatedRequest) {
+    const user = await this.userService.remove(req.user.id);
     return new UserResponseDto(user);
   }
 }

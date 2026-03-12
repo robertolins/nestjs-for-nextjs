@@ -81,8 +81,13 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  // private
-  private async findIfUserExists(userData: Partial<User>) {
+  async remove(id: string) {
+    const user = await this.findIfUserExists({ id });
+    await this.userRepository.delete({ id });
+    return user;
+  }
+
+  async findIfUserExists(userData: Partial<User>) {
     const user = await this.userRepository.findOneBy(userData);
 
     if (!user) throw new NotFoundException('Usuário não encontrado');
@@ -90,6 +95,7 @@ export class UserService {
     return user;
   }
 
+  // private
   private async failIfEmailExists(email: string) {
     const exists = await this.userRepository.exists({
       where: { email },
