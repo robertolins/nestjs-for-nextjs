@@ -25,3 +25,14 @@ Content-Type: application/json
   "email": "email@email.com",
   "password": "123456"
 }
+
+
+### Update user
+# @name updateUser
+PATCH {{baseurl}}/user
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "email": "user1@email.com"
+}
