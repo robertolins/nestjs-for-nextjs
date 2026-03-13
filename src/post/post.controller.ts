@@ -7,12 +7,14 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import type { AuthenticatedRequest } from 'src/auth/types/authenticated-request';
 import { PostResponseDto } from './dto/post-response.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('post')
 export class PostController {
@@ -40,5 +42,16 @@ export class PostController {
   async findAllOwned(@Req() req: AuthenticatedRequest) {
     const posts = await this.postService.findAllOwned(req.user);
     return posts.map(post => new PostResponseDto(post));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() dto: UpdatePostDto,
+  ) {
+    const post = await this.postService.update({ id }, dto, req.user);
+    return new PostResponseDto(post);
   }
 }
