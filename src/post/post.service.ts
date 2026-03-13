@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Post } from './entities/post.entity';
+import { Repository } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { createSlugFromText } from 'src/common/utils/create-slug-from-text';
 
 @Injectable()
 export class PostService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
-  }
+  private readonly logger = new Logger(PostService.name);
 
-  findAll() {
-    return `This action returns all post`;
-  }
+  constructor(
+    @InjectRepository(Post)
+    private readonly postRepository: Repository<Post>,
+  ) {}
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
-  }
+  async create(dto: CreatePostDto, author: User) {
+    const post = this.postRepository.create({
+      slug: createSlugFromText(dto.title),
+      author,
+      content: dto.content,
+      excerpt: dto.excerpt,
+      coverImageUrl: dto.coverImageUrl,
+      title: dto.title,
+    });
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
-  }
+    const created = await this.postRepository
+      .save(post)
+      .catch((err: unknown) => {
+        if (err instanceof Error) {
+          this.logger.error('Erro ao criar post', err.stack);
+        }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+        throw new BadRequestException('Erro ao criar o post');
+      });
+
+    return created;
   }
 }
