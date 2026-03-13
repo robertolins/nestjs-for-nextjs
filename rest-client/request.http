@@ -6,7 +6,7 @@
 @imagePath = {{uploadImage.response.body.url}}
 @imageUrl = {{baseUrl}}{{imagePath}}
 
-@userNameForTesting = Roberto
+@userNameForTesting = Roberto Lima
 @userEmailForTesting = roberto@email.com
 @userPasswordForTesting = 123456
 @userNewPasswordForTesting = 123456
@@ -38,7 +38,7 @@ Content-Type: application/json
 
 ### Update user
 # @name updateUser
-PATCH {{baseUrl}}/user/me
+PATCH {{baseUrl}}/user
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -49,7 +49,7 @@ Authorization: Bearer {{jwtToken}}
 
 ### Update user password
 # @name updateUserPassword
-PATCH {{baseUrl}}/user/me/password
+PATCH {{baseUrl}}/user/password
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -60,19 +60,19 @@ Authorization: Bearer {{jwtToken}}
 
 ### Read one user
 # @name readOneUser
-GET {{baseUrl}}/user/me
+GET {{baseUrl}}/user
 Authorization: Bearer {{jwtToken}}
 
 ### Delete one user
 # @name deleteOneUser
-DELETE {{baseUrl}}/user/me
+DELETE {{baseUrl}}/user
 Authorization: Bearer {{jwtToken}}
 
 # POST ########################################################################
 
 ### Create post owned
 # @name createPostOwned
-POST {{baseUrl}}/post/me
+POST {{baseUrl}}/post
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -84,25 +84,25 @@ Authorization: Bearer {{jwtToken}}
 
 ### Read all post public
 # @name readAllPostPublic
-GET {{baseUrl}}/post/
+GET {{baseUrl}}/post/public
 
 ### Read one post public
 # @name readOnePostPublic
-GET {{baseUrl}}/post/{{postSlug}}
+GET {{baseUrl}}/post/public/{{postSlug}}
 
 ### Read all post owned
 # @name readAllPostOwned
-GET {{baseUrl}}/post/me
+GET {{baseUrl}}/post
 Authorization: Bearer {{jwtToken}}
 
 ### Read one post owned
 # @name readOnePostOwned
-GET {{baseUrl}}/post/me/{{postUuid}}
+GET {{baseUrl}}/post/{{postUuid}}
 Authorization: Bearer {{jwtToken}}
 
 ### Update one post owned
 # @name updateOnePostOwned
-PATCH {{baseUrl}}/post/me/{{postUuid}}
+PATCH {{baseUrl}}/post/{{postUuid}}
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -115,7 +115,7 @@ Authorization: Bearer {{jwtToken}}
 
 ### Delete one post owned
 # @name deleteOnePostOwned
-DELETE {{baseUrl}}/post/me/{{postUuid}}
+DELETE {{baseUrl}}/post/{{postUuid}}
 Authorization: Bearer {{jwtToken}}
 
 # UPLOAD ######################################################################
