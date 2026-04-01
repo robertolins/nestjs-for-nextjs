@@ -72,7 +72,7 @@ export class PostController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('me/:id')
+  @Delete(':id')
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
     @Req() req: AuthenticatedRequest,

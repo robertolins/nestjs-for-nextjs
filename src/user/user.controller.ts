@@ -34,19 +34,20 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch()
-  async update(@Req() req: AuthenticatedRequest, @Body() dto: UpdateUserDto) {
-    const user = await this.userService.update(req.user.id, dto);
-    return new UserResponseDto(user);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Patch('password')
   async updatePassword(
     @Req() req: AuthenticatedRequest,
     @Body() dto: UpdatePasswordDto,
   ) {
+    console.log({ dto });
     const user = await this.userService.updatePassword(req.user.id, dto);
+    return new UserResponseDto(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch()
+  async update(@Req() req: AuthenticatedRequest, @Body() dto: UpdateUserDto) {
+    const user = await this.userService.update(req.user.id, dto);
     return new UserResponseDto(user);
   }
 
