@@ -32,6 +32,9 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
       database: process.env.DB_DATABASE,
       synchronize: process.env.DB_SYNCHRONIZE === '1',
       autoLoadEntities: process.env.DB_AUTO_LOAD_ENTITIES === '1',
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     AuthModule,
     UserModule,
